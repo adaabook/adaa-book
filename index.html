@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>نمكّن الأداء</title>
+<meta name="description" content="منتجات وحلول التمكين للأجهزة العامة · مركز أداء 2026">
+<meta property="og:type" content="website">
+<meta property="og:title" content="نمكّن الأداء">
+<meta property="og:description" content="منتجات وحلول التمكين للأجهزة العامة · مركز أداء 2026">
+<meta property="og:image" content="https://adaabook.github.io/adaa-book/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://adaabook.github.io/adaa-book/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://adaabook.github.io/adaa-book/og.jpg">
+<meta name="theme-color" content="#03130f">
 <link rel="preload" as="image" href="m-01.jpg">
 <style>
 :root{color-scheme:dark;--ink:#efe7da;--mut:#c9bfae}
@@ -24,11 +34,12 @@ body{margin:0;color:var(--ink);font:15px/1.4 system-ui,"Segoe UI",Tahoma,sans-se
 .page.--left::after{opacity:1;background:linear-gradient(to left,rgba(0,0,0,.28),rgba(0,0,0,.08) 4%,transparent 9%),linear-gradient(to left,rgba(255,255,255,.10),transparent 1.5%)}
 .page.--right::after{opacity:1;background:linear-gradient(to right,rgba(0,0,0,.28),rgba(0,0,0,.08) 4%,transparent 9%)}
 .portrait .page::after{opacity:0!important}
-.hot{position:absolute;display:block;z-index:3;border-radius:6px;box-shadow:0 0 0 1px rgba(255,236,200,.35),0 0 10px 1px rgba(255,236,200,.25);animation:hotglow 2.6s ease-in-out infinite}
-.hot:hover,.hot:active{background:rgba(255,255,255,.14)}
-@keyframes hotglow{0%,100%{box-shadow:0 0 0 1px rgba(255,236,200,.12),0 0 4px 0 rgba(255,236,200,.08)}50%{box-shadow:0 0 0 1px rgba(255,236,200,.55),0 0 14px 3px rgba(255,236,200,.35)}}
-.hot.vid::after{content:"";position:absolute;inset:0;margin:auto;width:42px;height:42px;max-width:60%;max-height:60%;border-radius:50%;background:rgba(255,255,255,.0)}
-@media(prefers-reduced-motion:reduce){.hot{animation:none}}
+.hot{position:absolute;display:block;z-index:3;border-radius:8px;transition:background .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent}
+.hot:hover,.hot:active{background:rgba(255,255,255,.10);box-shadow:0 0 14px 2px rgba(255,236,200,.35)}
+.hot.ext{box-shadow:0 0 10px 1px rgba(255,236,200,.18)}
+.hot.vid{border-radius:10px;animation:vglow 2.8s ease-in-out infinite}
+@keyframes vglow{0%,100%{box-shadow:0 0 8px 2px rgba(255,255,255,.25)}50%{box-shadow:0 0 22px 6px rgba(255,255,255,.55)}}
+@media(prefers-reduced-motion:reduce){.hot.vid{animation:none;box-shadow:0 0 16px 4px rgba(255,255,255,.4)}}
 /* in-book video player */
 #vbox{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);display:none;place-items:center;padding:16px}
 #vbox.on{display:grid}
@@ -47,6 +58,23 @@ body{margin:0;color:var(--ink);font:15px/1.4 system-ui,"Segoe UI",Tahoma,sans-se
 .toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:40;background:rgba(0,0,0,.8);color:var(--ink);padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.on{opacity:1}
 #snd.off svg .w{display:none}
+.num{position:absolute;z-index:2;white-space:nowrap;direction:ltr;font-family:Georgia,"Times New Roman",serif;font-weight:400;pointer-events:none;transform:translateX(-100%)}
+#spot{position:absolute;inset:0;pointer-events:none;z-index:50;opacity:0;transition:opacity .35s;mix-blend-mode:screen;
+  background:radial-gradient(circle 120px at var(--sx,50%) var(--sy,50%),rgba(255,250,235,.28),rgba(255,250,235,.08) 45%,transparent 70%)}
+#spot.on{opacity:1}
+/* 1: cover shine */
+.shine{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.shine::before{content:"";position:absolute;top:-20%;bottom:-20%;width:35%;left:-60%;transform:skewX(-18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.07) 35%,rgba(255,255,255,.28) 50%,rgba(255,255,255,.07) 65%,transparent);
+  animation:shine 6s ease-in-out 1.2s infinite}
+@keyframes shine{0%{left:-60%}35%,100%{left:130%}}
+/* 4: resume banner */
+#resume{position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);z-index:45;background:rgba(10,24,20,.94);border:1px solid rgba(239,231,218,.25);
+  box-shadow:0 0 18px 2px rgba(255,255,255,.18);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;transition:transform .5s cubic-bezier(.3,.7,.2,1);width:max-content;max-width:94vw}
+#resume.on{transform:translate(-50%,0)}
+#resume span{font-size:14px}
+#resume button{font:inherit;font-size:13px;border-radius:9px;padding:7px 11px;cursor:pointer;border:1px solid rgba(239,231,218,.35);background:transparent;color:var(--ink)}
+#resume button.go{background:#efe7da;color:#0b2a24;border-color:#efe7da}
 #snd:not(.off) svg .x{display:none}
 .bar{position:fixed;inset:auto 0 165px 0;height:64px;display:flex;align-items:center;justify-content:center;gap:14px;padding:0 12px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(239,231,218,.3);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer}
@@ -66,8 +94,8 @@ body{margin:0;color:var(--ink);font:15px/1.4 system-ui,"Segoe UI",Tahoma,sans-se
 </style>
 </head>
 <body>
-<div class="stage" id="stage"><div class="wrap" id="wrap"><div id="glow"></div><div id="book"></div></div></div>
-<p class="hint" id="hint">اسحب طرف الصفحة لتقليبها · اقلب الجوال بالعرض لعرض أكبر · العدسة للقراءة بدقة عالية</p>
+<div class="stage" id="stage"><div class="wrap" id="wrap"><div id="glow"></div><div id="book"></div><div id="spot"></div></div></div>
+<p class="hint" id="hint">اسحب الصفحة لتقليبها · اقلب الجوال بالعرض لعرض أكبر</p>
 <nav class="bar" aria-label="التنقل">
   <button class="btn" id="prev" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
   <div class="count" id="count">1 / 12</div>
@@ -95,18 +123,19 @@ body{margin:0;color:var(--ink);font:15px/1.4 system-ui,"Segoe UI",Tahoma,sans-se
 </ol></div>
 <button class="btn" id="tclose" aria-label="إغلاق الفهرس"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 <div class="toast" id="toast"></div>
+<div id="resume" role="dialog"><span id="rtext"></span><button class="go" id="rgo">كمّل</button><button id="rno">من البداية</button></div>
 <div id="vbox" role="dialog" aria-label="المقطع"><div class="frame"><iframe id="vfr" allow="autoplay; fullscreen" allowfullscreen></iframe></div></div>
 <button class="btn" id="vclose" aria-label="إغلاق" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 <script src="page-flip.browser.js"></script>
 <script>
 {
-const HS = [[{"b": [86.31, 90.42, 2.41, 1.7], "g": 3}, {"b": [82.83, 89.82, 9.35, 2.89], "g": 3}, {"b": [76.94, 90.42, 2.41, 1.7], "g": 4}, {"b": [73.46, 89.82, 9.35, 2.89], "g": 4}, {"b": [67.57, 90.42, 2.41, 1.7], "g": 5}, {"b": [64.09, 89.82, 9.35, 2.89], "g": 5}, {"b": [58.2, 90.42, 2.41, 1.7], "g": 6}, {"b": [54.72, 89.82, 9.35, 2.89], "g": 6}, {"b": [48.82, 90.42, 2.41, 1.7], "g": 7}, {"b": [45.35, 89.82, 9.35, 2.89], "g": 7}, {"b": [39.45, 90.42, 2.41, 1.7], "g": 8}, {"b": [35.98, 89.82, 9.35, 2.89], "g": 8}, {"b": [30.08, 90.42, 2.41, 1.7], "g": 9}, {"b": [26.61, 89.82, 9.35, 2.89], "g": 9}, {"b": [20.71, 90.42, 2.41, 1.7], "g": 10}, {"b": [17.24, 89.82, 9.35, 2.89], "g": 10}, {"b": [11.34, 90.42, 2.41, 1.7], "g": 11}, {"b": [7.87, 89.82, 9.35, 2.89], "g": 11}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}, {"b": [14.85, 8.61, 70.56, 28.81], "u": "https://drive.google.com/file/d/1KrkOnVcKEpGIrNaWVb1eo-Te6n7plUlf/view?usp=drivesdk"}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}, {"b": [58.93, 31.29, 33.27, 12.99], "g": 5}, {"b": [33.09, 38.64, 21.6, 3.08], "g": 5}, {"b": [58.93, 45.13, 33.27, 10.25], "g": 6}, {"b": [58.93, 56.24, 33.27, 11.54], "g": 7}, {"b": [33.09, 60.51, 21.6, 3.08], "g": 7}, {"b": [7.87, 60.51, 21.6, 3.08], "g": 7}, {"b": [7.87, 69.83, 46.81, 3.08], "g": 8}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}, {"b": [10.51, 78.99, 33.26, 14.51], "u": "https://drive.google.com/file/d/1r_5RxNo4UpsBV53Rau-xEfaV8tJSxOLb/view?usp=drivesdk"}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.52, 7.26, 2.55], "g": 1}, {"b": [52.76, 44.28, 39.46, 6.48], "g": 5}, {"b": [52.76, 50.77, 39.46, 6.48], "g": 5}, {"b": [52.76, 57.27, 39.46, 6.48], "g": 5}, {"b": [52.76, 63.76, 39.46, 6.48], "g": 5}, {"b": [52.76, 70.26, 39.46, 6.48], "g": 6}, {"b": [52.76, 76.75, 39.46, 6.48], "g": 6}, {"b": [7.87, 44.28, 39.46, 6.48], "g": 7}, {"b": [7.87, 50.77, 39.46, 6.48], "g": 7}, {"b": [7.87, 57.27, 39.46, 6.48], "g": 7}, {"b": [7.87, 63.76, 39.46, 6.48], "g": 7}, {"b": [7.87, 70.26, 39.46, 6.48], "g": 8}, {"b": [7.87, 76.75, 39.46, 6.48], "g": 9}], [{"b": [68.0, 88.54, 24.19, 2.89], "u": "https://adaa.gov.sa/"}]];
+const HS = [[{"b": [82.83, 88.6, 9.35, 4.6], "g": 3}, {"b": [73.46, 88.6, 9.35, 4.6], "g": 4}, {"b": [64.09, 88.6, 9.35, 4.6], "g": 5}, {"b": [54.72, 88.6, 9.35, 4.6], "g": 6}, {"b": [45.35, 88.6, 9.35, 4.6], "g": 7}, {"b": [35.98, 88.6, 9.35, 4.6], "g": 8}, {"b": [26.61, 88.6, 9.35, 4.6], "g": 9}, {"b": [17.24, 88.6, 9.35, 4.6], "g": 10}, {"b": [7.87, 88.6, 9.35, 4.6], "g": 11}], [], [{"b": [14.85, 8.61, 70.56, 28.81], "u": "https://drive.google.com/file/d/1KrkOnVcKEpGIrNaWVb1eo-Te6n7plUlf/view?usp=drivesdk"}], [{"b": [58.93, 31.29, 33.27, 12.99], "g": 5}, {"b": [58.93, 45.13, 33.27, 10.25], "g": 6}, {"b": [58.93, 56.24, 33.27, 11.54], "g": 7}, {"b": [58.93, 69.4, 33.27, 6.7], "g": 8}, {"b": [58.93, 78.4, 33.27, 9.0], "g": 9}], [{"b": [10.51, 78.99, 33.26, 14.51], "u": "https://drive.google.com/file/d/1r_5RxNo4UpsBV53Rau-xEfaV8tJSxOLb/view?usp=drivesdk"}], [], [], [], [], [], [{"b": [52.76, 44.28, 39.46, 6.48], "g": 5}, {"b": [52.76, 50.77, 39.46, 6.48], "g": 5}, {"b": [52.76, 57.27, 39.46, 6.48], "g": 5}, {"b": [52.76, 63.76, 39.46, 6.48], "g": 5}, {"b": [52.76, 70.26, 39.46, 6.48], "g": 6}, {"b": [52.76, 76.75, 39.46, 6.48], "g": 6}, {"b": [7.87, 44.28, 39.46, 6.48], "g": 7}, {"b": [7.87, 50.77, 39.46, 6.48], "g": 7}, {"b": [7.87, 57.27, 39.46, 6.48], "g": 7}, {"b": [7.87, 63.76, 39.46, 6.48], "g": 7}, {"b": [7.87, 70.26, 39.46, 6.48], "g": 8}, {"b": [7.87, 76.75, 39.46, 6.48], "g": 9}], [{"b": [64.0, 86.5, 30.0, 7.0], "u": "https://adaa.gov.sa/"}]];
 const N = 12, PW = 2409, PH = 3411, RATIO = PW / PH;
 const book = document.getElementById('book'), wrap = document.getElementById('wrap'), glow = document.getElementById('glow');
 const srcM = p => `m-${String(p).padStart(2, '0')}.jpg`, srcH = p => `hi-${String(p).padStart(2, '0')}.jpg`;
 const hot = p => (HS[p - 1] || []).map(h => {
   const [x, y, w, hh] = h.b, st = `left:${x}%;top:${y}%;width:${w}%;height:${hh}%`;
-  return h.u ? `<a class="hot${/drive\.google\.com\/file\/d\//.test(h.u) ? ' vid' : ''}" style="${st}" href="${h.u}" target="_blank" rel="noopener" aria-label="${/drive\.google/.test(h.u) ? 'تشغيل المقطع' : 'فتح الرابط'}"></a>`
+  return h.u ? `<a class="hot${/drive\.google\.com\/file\/d\//.test(h.u) ? ' vid' : ' ext'}" style="${st}" href="${h.u}" target="_blank" rel="noopener" aria-label="${/drive\.google/.test(h.u) ? 'تشغيل المقطع' : 'فتح الرابط'}"></a>`
              : `<a class="hot" style="${st}" href="#" data-go="${h.g}" aria-label="انتقال إلى صفحة ${h.g}"></a>`;
 }).join('');
 const PORTRAIT = false; // always show facing pages (covers stay single)
@@ -127,6 +156,25 @@ const startP = Math.min(N, Math.max(1, parseInt((location.hash.match(/p=(\d+)/) 
 // RTL: pages are fed in reverse, index 0 = back cover … index N-1 = front cover
 const order = Array.from({ length: N }, (_, i) => N - i);
 book.innerHTML = order.map(p => `<div class="page" data-p="${p}" ${p === 1 || p === N ? 'data-density="hard"' : ''}><img data-src="${srcM(p)}" alt="صفحة ${p}" decoding="async">${hot(p)}</div>`).join('');
+const NUMS = {"1": [["16", 27.896, 81.518, 2.571, "#f5f3e7"], ["5", 49.063, 81.518, 2.571, "#f5f3e9"], ["+24,000", 70.23, 81.518, 2.571, "#f5f2e7"]], "3": [["32", 86.895, 58.811, 3.792, "#f8f2e7"], ["7", 30.462, 58.811, 3.792, "#f7f0e6"], ["20,834", 58.679, 58.811, 3.792, "#f9f2e7"], ["22", 87.988, 69.737, 2.164, "#f8f2e9"], ["463", 66.827, 69.737, 2.164, "#f9f3ea"], ["97.8%", 45.66, 69.737, 2.164, "#f9f3ea"], ["7", 24.499, 69.737, 2.164, "#f6f0e7"], ["20,224", 87.988, 77.114, 2.164, "#f8f2e8"], ["1,157", 66.827, 77.114, 2.164, "#f7f1e8"], ["8", 45.66, 77.114, 2.164, "#faf4ea"], ["8", 24.499, 77.114, 2.164, "#faf4eb"], ["79", 87.988, 84.488, 2.168, "#f7f1e9"], ["32", 66.827, 84.488, 2.168, "#f9f3ea"], ["6", 45.66, 84.488, 2.168, "#f8f3e9"], ["147", 24.499, 84.488, 2.168, "#f7f1e7"]], "2": [["+24,000", 85.06, 79.342, 2.303, "#f8f1e7"], ["+330,000", 64.505, 79.342, 2.303, "#f8f2e8"], ["+7,000", 43.944, 79.342, 2.303, "#f7f1e7"], ["+120", 23.388, 79.342, 2.303, "#f7f1e6"]], "6": [["+330,000", 90.524, 74.107, 4.06, "#f8f2e3"], ["+7,000", 58.827, 74.107, 4.06, "#cec5b2"]], "10": [["3", 87.852, 56.24, 3.519, "#063126"], ["6", 67.902, 56.24, 3.519, "#043127"], ["98.7%", 43.094, 56.24, 3.519, "#053127"], ["+700", 23.145, 56.24, 3.519, "#05342a"]]};
+book.querySelectorAll('.page').forEach(pg => (NUMS[pg.dataset.p] || []).forEach(([t, x1, y0, hh, c]) => {
+  const d = document.createElement('span'); d.className = 'num'; d.dataset.t = t; d.textContent = t;
+  d.style.cssText = `left:${x1}%;top:${y0}%;height:${hh}%;line-height:1;color:${c};--hh:${hh}`;
+  pg.appendChild(d);
+}));
+const sizeNums = H => book.querySelectorAll('.num').forEach(d => { const px = H * (+d.style.getPropertyValue('--hh')) / 100; d.style.fontSize = (px / 1.136) + 'px'; d.style.lineHeight = px + 'px'; });
+const fmt = (v, t) => { const dec = (t.split('.')[1] || '').replace('%', '').length; let s = v.toFixed(dec);
+  if (t.includes(',')) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (t[0] === '+' ? '+' : '') + s + (t.endsWith('%') ? '%' : ''); };
+const countUp = p => document.querySelectorAll(`.page[data-p="${p}"] .num`).forEach((d, i) => {
+  const t = d.dataset.t, end = parseFloat(t.replace(/[+,%]/g, '')); if (!isFinite(end)) return;
+  const dur = 1400 + Math.min(800, end > 999 ? 600 : 0), t0 = performance.now() + i * 60;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { d.textContent = t; return; }
+  d.textContent = fmt(0, t);
+  const step = now => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); const e = 1 - Math.pow(1 - k, 3);
+    d.textContent = k >= 1 ? t : fmt(end * e, t); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+});
+{ const cv = book.querySelector('.page[data-p="1"]'); if (cv) { const sh = document.createElement('span'); sh.className = 'shine'; cv.appendChild(sh); } }
 const imgs = [...book.querySelectorAll('img')];
 const loadAround = p => imgs.forEach(im => {
   const q = +im.parentElement.dataset.p;
@@ -137,7 +185,7 @@ loadAround(startP);
 addEventListener('load', () => setTimeout(() => imgs.forEach(im => { if (!im.src) im.src = im.dataset.src; }), 1500));
 
 const { pw, h } = fitSize();
-book.style.width = (PORTRAIT ? pw : pw * 2) + 'px'; book.style.height = h + 'px';
+book.style.width = (PORTRAIT ? pw : pw * 2) + 'px'; book.style.height = h + 'px'; sizeNums(h);
 const pf = new St.PageFlip(book, {
   width: pw, height: h, size: 'fixed',
   showCover: true, usePortrait: PORTRAIT, mobileScrollSupport: false,
@@ -163,7 +211,18 @@ const sync = () => {
   placeGlow(cur); loadAround(cur);
   history.replaceState(null, '', '#p=' + cur);
 };
-pf.on('flip', () => { sync(); hideHint(); sfx('flip'); });
+const visible = p => (p === 1 || p === N) ? [p] : (p % 2 ? [p - 1, p] : [p, p + 1]);
+pf.on('flip', () => { sync(); hideHint(); sfx('flip'); visible(cur).forEach(countUp); try { localStorage.setItem('adaa-page', cur); } catch (e) {} });
+setTimeout(() => visible(cur).forEach(countUp), 700);
+// remember where the reader stopped
+(() => { let saved = 0; try { saved = +localStorage.getItem('adaa-page') || 0; } catch (e) {}
+  if (location.hash || saved < 2 || saved > N) return;
+  const r = document.getElementById('resume'); document.getElementById('rtext').textContent = `وقفت عند صفحة ${saved}، تكمل؟`;
+  setTimeout(() => r.classList.add('on'), 900);
+  const close = () => r.classList.remove('on');
+  document.getElementById('rgo').onclick = () => { sfx('click'); close(); setTimeout(() => api.to(saved), 250); };
+  document.getElementById('rno').onclick = () => { sfx('click'); close(); try { localStorage.setItem('adaa-page', 1); } catch (e) {} };
+  setTimeout(close, 9000); })();
 pf.on('changeState', e => { if (e.data !== 'read') hideHint(); });
 sync();
 // keep the arrows and the hint right under the book
@@ -175,63 +234,100 @@ const placeBar = () => {
 };
 placeBar(); requestAnimationFrame(placeBar);
 
+// ---------- soft light that follows the finger while turning ----------
+const spot = document.getElementById('spot');
+const moveSpot = (x, y) => { const r = wrap.getBoundingClientRect(); spot.style.setProperty('--sx', (x - r.left) + 'px'); spot.style.setProperty('--sy', (y - r.top) + 'px'); };
+let spotOn = false;
+const pt = e => e.touches && e.touches[0] ? e.touches[0] : e;
+wrap.addEventListener('pointerdown', e => { if (e.target.closest('a.hot')) return; spotOn = true; moveSpot(e.clientX, e.clientY); spot.classList.add('on'); }, { passive: true });
+addEventListener('pointermove', e => { if (spotOn) moveSpot(e.clientX, e.clientY); }, { passive: true });
+wrap.addEventListener('touchmove', e => { if (spotOn) { const q = pt(e); moveSpot(q.clientX, q.clientY); } }, { passive: true });
+['pointerup', 'pointercancel', 'touchend'].forEach(ev => addEventListener(ev, () => { spotOn = false; spot.classList.remove('on'); }, { passive: true }));
+
+// ---------- swipe anywhere on the screen to turn (not only from the page corner) ----------
+let sw = null, libFlipped = false;
+pf.on('changeState', e => { if (e.data !== 'read') libFlipped = true; });
+const swStart = (x, y, t) => { if (t && t.closest && (t.closest('.bar') || t.closest('#toc') || t.closest('#reader') || t.closest('#vbox'))) { sw = null; return; } sw = { x, y, t: Date.now() }; libFlipped = false; };
+const swEnd = (x, y) => {
+  if (!sw) return; const dx = x - sw.x, dy = y - sw.y, dt = Date.now() - sw.t; sw = null;
+  if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx) || dt > 900) return;
+  const idx0 = pf.getCurrentPageIndex(), go = () => (dx > 0 ? api.next() : api.prev());
+  setTimeout(() => {
+    if (!libFlipped) return go();
+    setTimeout(() => { if (pf.getCurrentPageIndex() === idx0 && pf.getState() === 'read') go(); }, 950);   // engine folded but sprang back
+  }, 90);   // RTL: swipe right = next page
+};
+const inStage = t => t && t.closest && t.closest('#stage');
+document.addEventListener('touchstart', e => { if (!inStage(e.target)) { sw = null; return; } const q = e.touches[0]; swStart(q.clientX, q.clientY, e.target); }, { capture: true, passive: true });
+document.addEventListener('touchend', e => { const q = e.changedTouches[0]; swEnd(q.clientX, q.clientY); }, { capture: true, passive: true });
+document.addEventListener('mousedown', e => { if (inStage(e.target)) swStart(e.clientX, e.clientY, e.target); else sw = null; }, true);
+document.addEventListener('mouseup', e => swEnd(e.clientX, e.clientY), true);
+
 const api = { next: () => pf.flipPrev('top'), prev: () => pf.flipNext('top'), to: p => pf.flip(N - p) };
-// ---------- sound: soft Saudi-style music, page-flip and click sounds ----------
-let AC = null, bufs = {}, musicSrc = null, musicGain = null, soundOn = true;
+// ---------- sound: music via <audio> (plays even with the iPhone silent switch), effects via Web Audio ----------
+let AC = null, bufs = {}, soundOn = true, unlocked = false;
 try { soundOn = localStorage.getItem('adaa-sound') !== 'off'; } catch (e) {}
+try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+const bgm = new Audio('music.mp3'); bgm.loop = true; bgm.preload = 'auto'; bgm.setAttribute('playsinline', '');
 const sndB = document.getElementById('snd');
 sndB.classList.toggle('off', !soundOn);
 const load = async (k, u) => { try { const r = await fetch(u); bufs[k] = await AC.decodeAudioData(await r.arrayBuffer()); } catch (e) {} };
-const startAudio = () => {
-  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
-  const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
-  AC = new C();
-  Promise.all([load('music', 'music.mp3'), load('flip', 'flip.mp3'), load('click', 'click.mp3')]).then(() => { if (soundOn) playMusic(); });
-};
-const playMusic = () => {
-  if (!AC || !bufs.music || musicSrc) return;
-  musicGain = AC.createGain(); musicGain.gain.value = 0; musicGain.connect(AC.destination);
-  musicSrc = AC.createBufferSource(); musicSrc.buffer = bufs.music; musicSrc.loop = true; musicSrc.connect(musicGain); musicSrc.start();
-  musicGain.gain.linearRampToValueAtTime(0.45, AC.currentTime + 2.5);
-};
-const stopMusic = () => {
-  if (!musicSrc) return; const s = musicSrc, g = musicGain; musicSrc = null;
-  g.gain.cancelScheduledValues(AC.currentTime); g.gain.setValueAtTime(g.gain.value, AC.currentTime);
-  g.gain.linearRampToValueAtTime(0, AC.currentTime + 0.6); setTimeout(() => { try { s.stop(); } catch (e) {} }, 700);
+const playMusic = () => { if (soundOn) { const p = bgm.play(); if (p && p.catch) p.catch(() => {}); } };
+const stopMusic = () => bgm.pause();
+const unlock = () => {
+  if (!AC) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (C) { AC = new C(); load('flip', 'flip.mp3'); load('click', 'click.mp3'); }
+  }
+  if (AC) {
+    if (AC.state !== 'running') AC.resume();
+    try { const b = AC.createBuffer(1, 1, 22050), s = AC.createBufferSource(); s.buffer = b; s.connect(AC.destination); s.start(0); } catch (e) {}
+  }
+  if (!unlocked && soundOn && !vbox.classList.contains('on')) playMusic();
+  if (!bgm.paused) unlocked = true;
 };
 function sfx(k) {
   if (!soundOn || !AC || !bufs[k]) return;
-  const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = k === 'flip' ? 0.6 : 0.35;
+  if (AC.state !== 'running') AC.resume();
+  const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = k === 'flip' ? 0.7 : 0.4;
   s.buffer = bufs[k]; s.playbackRate.value = 0.94 + Math.random() * 0.12; s.connect(g); g.connect(AC.destination); s.start();
 }
-['pointerdown', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, startAudio, { passive: true }));
-sndB.onclick = () => {
+['touchend', 'click', 'keydown', 'pointerup'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, passive: true }));
+sndB.addEventListener('click', () => {
   soundOn = !soundOn; sndB.classList.toggle('off', !soundOn);
   try { localStorage.setItem('adaa-sound', soundOn ? 'on' : 'off'); } catch (e) {}
-  if (soundOn) { startAudio(); playMusic(); sfx('click'); } else stopMusic();
-};
+  if (soundOn) { playMusic(); sfx('click'); } else stopMusic();
+});
 document.querySelectorAll('.bar .btn:not(#snd), #rclose').forEach(b => b.addEventListener('click', () => sfx('click')));
-document.addEventListener('visibilitychange', () => { if (!AC) return; document.hidden ? AC.suspend() : AC.resume(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { bgm.pause(); if (AC) AC.suspend(); }
+  else { if (AC) AC.resume(); if (soundOn && unlocked && !vbox.classList.contains('on')) playMusic(); }
+});
 
-// ---------- videos play inside the magazine ----------
+// ---------- hotspots: links, page jumps and in-book videos (kept off the page-curl engine) ----------
 const vbox = document.getElementById('vbox'), vfr = document.getElementById('vfr'), vclose = document.getElementById('vclose');
 const openVideo = u => {
   const id = (u.match(/\/file\/d\/([^/]+)/) || [])[1]; if (!id) return false;
   vfr.src = `https://drive.google.com/file/d/${id}/preview`;
-  vbox.classList.add('on'); vclose.style.display = 'grid';
-  if (musicGain && AC) musicGain.gain.linearRampToValueAtTime(0, AC.currentTime + 0.5);
+  vbox.classList.add('on'); vclose.style.display = 'grid'; bgm.pause();
   return true;
 };
 const closeVideo = () => {
   vbox.classList.remove('on'); vclose.style.display = 'none'; vfr.src = 'about:blank';
-  if (soundOn && musicGain && AC) musicGain.gain.linearRampToValueAtTime(0.45, AC.currentTime + 1.5);
+  if (soundOn) playMusic();
 };
 vclose.onclick = () => { sfx('click'); closeVideo(); };
 vbox.addEventListener('click', e => { if (e.target === vbox) closeVideo(); });
-book.addEventListener('click', e => {
-  const a = e.target.closest('a.hot.vid');
-  if (a && openVideo(a.href)) { e.preventDefault(); e.stopPropagation(); sfx('click'); }
-  else if (e.target.closest('a.hot')) sfx('click');
+// stop the page-curl engine from grabbing presses that start on a hotspot
+['mousedown', 'touchstart', 'pointerdown', 'mouseup', 'touchend', 'pointerup', 'touchmove', 'mousemove'].forEach(ev => document.addEventListener(ev, e => {
+  if (e.target.closest && e.target.closest('a.hot')) e.stopPropagation();
+}, { capture: true, passive: true }));
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a.hot'); if (!a) return;
+  e.stopPropagation(); sfx('click');
+  if (a.dataset.go) { e.preventDefault(); api.to(+a.dataset.go); return; }
+  if (a.classList.contains('vid') && openVideo(a.href)) { e.preventDefault(); return; }
+  // external link (e.g. adaa.gov.sa): let the browser open it in a new tab
 }, true);
 
 // ---------- table of contents + share ----------
@@ -251,10 +347,6 @@ document.getElementById('share').onclick = async () => {
 
 nextB.onclick = () => api.next();
 prevB.onclick = () => api.prev();
-book.addEventListener('click', e => {
-  const a = e.target.closest('a.hot[data-go]');
-  if (a) { e.preventDefault(); e.stopPropagation(); api.to(+a.dataset.go); }
-}, true);
 addEventListener('keydown', e => {
   if (vbox.classList.contains('on')) { if (e.key === 'Escape') closeVideo(); return; }
   if (toc.classList.contains('on')) { if (e.key === 'Escape') toc.classList.remove('on'); return; }
