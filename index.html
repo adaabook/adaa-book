@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>نمكّن الأداء</title>
+<link rel="preload" as="image" href="m-01.jpg">
+<style>
+:root{color-scheme:dark;--ink:#efe7da;--mut:#c9bfae}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;color:var(--ink);font:15px/1.4 system-ui,"Segoe UI",Tahoma,sans-serif;overflow:hidden;
+  background:#020806 url(bg_main.jpg) center/cover no-repeat;-webkit-tap-highlight-color:transparent}
+.stage{position:fixed;inset:90px 0 240px 0;display:grid;place-items:center}
+.wrap{position:relative;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+#glow{position:absolute;top:0;height:100%;border-radius:2px;pointer-events:none;
+  box-shadow:0 0 16px 3px rgba(255,255,255,.55),0 0 48px 8px rgba(255,255,255,.22),0 0 110px 10px rgba(255,255,255,.08);
+  transition:left .8s cubic-bezier(.3,.7,.2,1),width .8s cubic-bezier(.3,.7,.2,1)}
+#book{position:relative}
+.page{background:#0b3a33;overflow:hidden}
+.page img{display:block;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none;pointer-events:none;background:#0b3a33}
+/* magazine spine: soft fold shading where the two pages meet */
+.page::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s}
+.page.--left::after{opacity:1;background:linear-gradient(to left,rgba(0,0,0,.28),rgba(0,0,0,.08) 4%,transparent 9%),linear-gradient(to left,rgba(255,255,255,.10),transparent 1.5%)}
+.page.--right::after{opacity:1;background:linear-gradient(to right,rgba(0,0,0,.28),rgba(0,0,0,.08) 4%,transparent 9%)}
+.portrait .page::after{opacity:0!important}
+.hot{position:absolute;display:block;z-index:3;border-radius:4px}
+.hot:hover{background:rgba(255,255,255,.12)}
+.bar{position:fixed;inset:auto 0 165px 0;height:64px;display:flex;align-items:center;justify-content:center;gap:14px;padding:0 12px;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(239,231,218,.3);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.btn:disabled{opacity:.3;cursor:default}.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.btn svg{width:20px;height:20px}
+.count{min-width:86px;text-align:center;color:var(--mut);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.hint{position:fixed;inset:auto 12px 104px 12px;text-align:center;color:var(--mut);font-size:13px;pointer-events:none;transition:opacity .6s;text-shadow:0 1px 3px #000}
+/* high-resolution reading view */
+#reader{position:fixed;inset:0;z-index:20;background:rgba(2,8,6,.97);overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding:56px 0 24px}
+#reader.on{display:block}
+#reader img{display:block;width:min(100%,1100px);height:auto;margin:0 auto 14px;aspect-ratio:2409/3411;background:#0b3a33;box-shadow:0 0 14px 2px rgba(255,255,255,.35)}
+#rclose{position:fixed;top:10px;left:10px;z-index:21;background:rgba(0,0,0,.55);display:none}
+#reader.on + #rclose{display:grid}
+@media(min-width:700px){.stage{inset:20px 0 170px 0}}
+@media(max-width:560px){.full{display:none}.bar{gap:8px}.count{min-width:64px}}
+@media(orientation:landscape) and (max-height:500px){.bar{bottom:100px}.stage{inset:4px 0 76px 0}.bar{height:52px}.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"><div class="wrap" id="wrap"><div id="glow"></div><div id="book"></div></div></div>
+<p class="hint" id="hint">اسحب طرف الصفحة لتقليبها · اقلب الجوال بالعرض لعرض أكبر · العدسة للقراءة بدقة عالية</p>
+<nav class="bar" aria-label="التنقل">
+  <button class="btn" id="prev" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
+  <div class="count" id="count">1 / 12</div>
+  <button class="btn" id="next" aria-label="الصفحة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="btn" id="zoom" aria-label="قراءة بدقة عالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M11 8.5v5M8.5 11h5"/></svg></button>
+  <button class="btn full" id="full" aria-label="ملء الشاشة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</nav>
+<div id="reader" aria-label="قراءة بدقة عالية"></div>
+<button class="btn" id="rclose" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<script src="page-flip.browser.js"></script>
+<script>
+{
+const HS = [[{"b": [86.31, 90.42, 2.41, 1.7], "g": 3}, {"b": [82.83, 89.82, 9.35, 2.89], "g": 3}, {"b": [76.94, 90.42, 2.41, 1.7], "g": 4}, {"b": [73.46, 89.82, 9.35, 2.89], "g": 4}, {"b": [67.57, 90.42, 2.41, 1.7], "g": 5}, {"b": [64.09, 89.82, 9.35, 2.89], "g": 5}, {"b": [58.2, 90.42, 2.41, 1.7], "g": 6}, {"b": [54.72, 89.82, 9.35, 2.89], "g": 6}, {"b": [48.82, 90.42, 2.41, 1.7], "g": 7}, {"b": [45.35, 89.82, 9.35, 2.89], "g": 7}, {"b": [39.45, 90.42, 2.41, 1.7], "g": 8}, {"b": [35.98, 89.82, 9.35, 2.89], "g": 8}, {"b": [30.08, 90.42, 2.41, 1.7], "g": 9}, {"b": [26.61, 89.82, 9.35, 2.89], "g": 9}, {"b": [20.71, 90.42, 2.41, 1.7], "g": 10}, {"b": [17.24, 89.82, 9.35, 2.89], "g": 10}, {"b": [11.34, 90.42, 2.41, 1.7], "g": 11}, {"b": [7.87, 89.82, 9.35, 2.89], "g": 11}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}, {"b": [14.85, 8.61, 70.56, 28.81], "u": "https://drive.google.com/file/d/1KrkOnVcKEpGIrNaWVb1eo-Te6n7plUlf/view?usp=drivesdk"}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}, {"b": [58.93, 31.29, 33.27, 12.99], "g": 5}, {"b": [33.09, 38.64, 21.6, 3.08], "g": 5}, {"b": [58.93, 45.13, 33.27, 10.25], "g": 6}, {"b": [58.93, 56.24, 33.27, 11.54], "g": 7}, {"b": [33.09, 60.51, 21.6, 3.08], "g": 7}, {"b": [7.87, 60.51, 21.6, 3.08], "g": 7}, {"b": [7.87, 69.83, 46.81, 3.08], "g": 8}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}, {"b": [10.51, 78.99, 33.26, 14.51], "u": "https://drive.google.com/file/d/1r_5RxNo4UpsBV53Rau-xEfaV8tJSxOLb/view?usp=drivesdk"}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.69, 7.26, 2.74], "g": 1}], [{"b": [84.94, 94.69, 7.26, 2.74], "g": 1}], [{"b": [7.87, 94.52, 7.26, 2.55], "g": 1}, {"b": [52.76, 44.28, 39.46, 6.48], "g": 5}, {"b": [52.76, 50.77, 39.46, 6.48], "g": 5}, {"b": [52.76, 57.27, 39.46, 6.48], "g": 5}, {"b": [52.76, 63.76, 39.46, 6.48], "g": 5}, {"b": [52.76, 70.26, 39.46, 6.48], "g": 6}, {"b": [52.76, 76.75, 39.46, 6.48], "g": 6}, {"b": [7.87, 44.28, 39.46, 6.48], "g": 7}, {"b": [7.87, 50.77, 39.46, 6.48], "g": 7}, {"b": [7.87, 57.27, 39.46, 6.48], "g": 7}, {"b": [7.87, 63.76, 39.46, 6.48], "g": 7}, {"b": [7.87, 70.26, 39.46, 6.48], "g": 8}, {"b": [7.87, 76.75, 39.46, 6.48], "g": 9}], [{"b": [68.0, 88.54, 24.19, 2.89], "u": "https://adaa.gov.sa/"}]];
+const N = 12, PW = 2409, PH = 3411, RATIO = PW / PH;
+const book = document.getElementById('book'), wrap = document.getElementById('wrap'), glow = document.getElementById('glow');
+const srcM = p => `m-${String(p).padStart(2, '0')}.jpg`, srcH = p => `hi-${String(p).padStart(2, '0')}.jpg`;
+const hot = p => (HS[p - 1] || []).map(h => {
+  const [x, y, w, hh] = h.b, st = `left:${x}%;top:${y}%;width:${w}%;height:${hh}%`;
+  return h.u ? `<a class="hot" style="${st}" href="${h.u}" target="_blank" rel="noopener" aria-label="تشغيل المقطع"></a>`
+             : `<a class="hot" style="${st}" href="#" data-go="${h.g}" aria-label="انتقال إلى صفحة ${h.g}"></a>`;
+}).join('');
+const PORTRAIT = false; // always show facing pages (covers stay single)
+if (PORTRAIT) document.body.classList.add('portrait');
+const barH = () => (innerHeight <= 500 && innerWidth > innerHeight ? 78 : innerWidth >= 700 ? 190 : 330);
+const fitSize = () => {
+  const aw = innerWidth * (PORTRAIT ? 0.92 : 0.95), ah = (innerHeight - barH()) * (PORTRAIT ? 0.9 : 0.92);
+  const per = PORTRAIT ? 1 : 2;
+  let h = ah, w = h * RATIO * per;
+  if (w > aw) { w = aw; h = w / (RATIO * per); }
+  return { pw: Math.floor(w / per), h: Math.floor(h) };
+};
+const count = document.getElementById('count'), prevB = document.getElementById('prev'), nextB = document.getElementById('next');
+const label = p => PORTRAIT ? `${p} / ${N}` : ((p === 1 || p === N) ? `${p} / ${N}` : (p % 2 ? `${p - 1}–${p}` : `${p}–${p + 1}`) + ` / ${N}`);
+const hideHint = () => document.getElementById('hint').style.opacity = 0;
+const startP = Math.min(N, Math.max(1, parseInt((location.hash.match(/p=(\d+)/) || [])[1] || '1', 10)));
+
+// RTL: pages are fed in reverse, index 0 = back cover … index N-1 = front cover
+const order = Array.from({ length: N }, (_, i) => N - i);
+book.innerHTML = order.map(p => `<div class="page" data-p="${p}" ${p === 1 || p === N ? 'data-density="hard"' : ''}><img data-src="${srcM(p)}" alt="صفحة ${p}" decoding="async">${hot(p)}</div>`).join('');
+const imgs = [...book.querySelectorAll('img')];
+const loadAround = p => imgs.forEach(im => {
+  const q = +im.parentElement.dataset.p;
+  if (!im.src && Math.abs(q - p) <= 4) im.src = im.dataset.src;
+});
+loadAround(startP);
+// warm the rest quietly once the first pages are in
+addEventListener('load', () => setTimeout(() => imgs.forEach(im => { if (!im.src) im.src = im.dataset.src; }), 1500));
+
+const { pw, h } = fitSize();
+book.style.width = (PORTRAIT ? pw : pw * 2) + 'px'; book.style.height = h + 'px';
+const pf = new St.PageFlip(book, {
+  width: pw, height: h, size: 'fixed',
+  showCover: true, usePortrait: PORTRAIT, mobileScrollSupport: false,
+  maxShadowOpacity: 0.5, flippingTime: 800, drawShadow: true, showPageCorners: true,
+  clickEventForward: true, useMouseEvents: true, swipeDistance: 20,
+  startPage: N - startP, autoSize: false, startZIndex: 1
+});
+pf.loadFromHTML(book.querySelectorAll('.page'));
+const pageOf = i => N - i;
+let cur = startP;
+const placeGlow = p => {
+  if (PORTRAIT) { glow.style.left = '0px'; glow.style.width = pw + 'px'; return; }
+  // landscape: front cover shows on the left half, back cover on the right half
+  if (p === 1) { glow.style.left = '0px'; glow.style.width = pw + 'px'; }
+  else if (p === N) { glow.style.left = pw + 'px'; glow.style.width = pw + 'px'; }
+  else { glow.style.left = '0px'; glow.style.width = pw * 2 + 'px'; }
+};
+const sync = () => {
+  cur = pageOf(pf.getCurrentPageIndex());
+  count.textContent = label(cur);
+  prevB.disabled = cur === 1; nextB.disabled = cur === N;
+  if (!PORTRAIT) wrap.style.transform = cur === 1 ? 'translateX(25%)' : cur === N ? 'translateX(-25%)' : 'none';
+  placeGlow(cur); loadAround(cur);
+  history.replaceState(null, '', '#p=' + cur);
+};
+pf.on('flip', () => { sync(); hideHint(); });
+pf.on('changeState', e => { if (e.data !== 'read') hideHint(); });
+sync();
+// keep the arrows and the hint right under the book
+const placeBar = () => {
+  const r = book.getBoundingClientRect(), bar = document.querySelector('.bar'), hint = document.getElementById('hint');
+  const top = Math.round(r.bottom + 26);
+  bar.style.top = top + 'px'; bar.style.bottom = 'auto';
+  hint.style.top = (top + 72) + 'px'; hint.style.bottom = 'auto';
+};
+placeBar(); requestAnimationFrame(placeBar);
+
+const api = { next: () => pf.flipPrev('top'), prev: () => pf.flipNext('top'), to: p => pf.flip(N - p) };
+nextB.onclick = () => api.next();
+prevB.onclick = () => api.prev();
+book.addEventListener('click', e => {
+  const a = e.target.closest('a.hot[data-go]');
+  if (a) { e.preventDefault(); e.stopPropagation(); api.to(+a.dataset.go); }
+}, true);
+addEventListener('keydown', e => {
+  if (reader.classList.contains('on')) { if (e.key === 'Escape') closeReader(); return; }
+  if (e.key === 'ArrowLeft') api.next(); if (e.key === 'ArrowRight') api.prev();
+});
+
+// rebuild cleanly when the phone is rotated or the window changes shape
+let rt;
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
+  const s = fitSize();
+  if (Math.abs(s.h - h) > 40 || Math.abs(s.pw - pw) > 40) location.reload();
+}, 250); });
+
+// high-resolution reading view (native pinch-zoom, scroll between pages)
+const reader = document.getElementById('reader'), rclose = document.getElementById('rclose');
+const openReader = () => {
+  if (!reader.childElementCount) reader.innerHTML = Array.from({ length: N }, (_, i) => `<img id="r${i + 1}" src="${srcH(i + 1)}" loading="lazy" alt="صفحة ${i + 1}">`).join('');
+  reader.classList.add('on');
+  const first = PORTRAIT || cur === 1 || cur === N ? cur : (cur % 2 ? cur - 1 : cur);
+  requestAnimationFrame(() => document.getElementById('r' + first).scrollIntoView({ block: 'start' }));
+};
+const closeReader = () => reader.classList.remove('on');
+document.getElementById('zoom').onclick = openReader;
+rclose.onclick = closeReader;
+document.getElementById('full').onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {} };
+}
+</script>
+</body>
+</html>
